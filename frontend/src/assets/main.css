@@ -1,0 +1,13 @@
+@import './base.css';
+
+
+#app {
+  min-width: 1000px;
+  width: 100vw;
+  margin: 0;
+  height: 100vh;
+  max-height: 100vh;
+  background-color: #FFF;
+  overflow-y: hidden;
+}
+
