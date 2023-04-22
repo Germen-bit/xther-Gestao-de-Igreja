@@ -1,22 +1,28 @@
 <script setup>
-import { RouterLink, RouterView } from 'vue-router'
 import NavBarView from './components/layout/NavBar.vue'
+import { onBeforeMount } from 'vue';
+import checkUsuario from './js/checkUsuario'
+import { computed } from 'vue';
+import { useStore } from 'vuex';
 
-const logged = true
+const store = useStore()
+const usuario = computed(() => store.getters.getUsuario)
+onBeforeMount(checkUsuario)
+
+const nome = "Germen"
+
 </script>
 
 <template>
-    <div id="main" class="">
-      <div id="navbar-view" class="col-12 mt-3 bg-info-subtle p-2">
-        <NavBarView v-if="logged" />
-      </div>
-    
-      <div id="center-content" class="col-12">
-        <RouterView />
-      </div>
+  <div id="main" class="">
+    <div id="navbar-view" class="col-12 mt-3 bg-info-subtle p-2">
+      <NavBarView v-if="usuario.length !== 0"/>       
     </div>
     
-
+    <div id="center-content" class="col-12">
+      <RouterView />
+    </div>
+  </div>
 </template>
 
 <style scoped>

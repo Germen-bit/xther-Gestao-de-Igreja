@@ -1,8 +1,9 @@
-const express = require("express")
+const express = require('express')
 const app = express()
+const cors = require('cors')
 const PORT = process.env.PORT || 5000
 const connectDB = require('./config/db')
-const { errorHandler } = require('./middleware/errorMiddleware')
+const errorHandler = require('./middleware/errorMiddleware')
 require('dotenv').config()
 
 connectDB()
@@ -10,6 +11,7 @@ connectDB()
 // Middlewares
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
+app.use(cors())
 
 // Routes
 app.use('/api/pastores', require('./routes/api/pastor'))
