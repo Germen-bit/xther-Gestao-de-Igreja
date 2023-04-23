@@ -1,7 +1,7 @@
 const asyncHandler = require("express-async-handler");
 const Lancamentos = require("../models/lancamento");
 const lancamento = require("../models/lancamento");
-
+ 
 // DESC     Busca todos os lancamentos
 // GET      api/lancamentos/
 // access   Private
