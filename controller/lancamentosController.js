@@ -20,6 +20,8 @@ const getLancamentos = asyncHandler(async(req, res) => {
 // access   Private
 const setLancamentos = asyncHandler(async (req, res) => {
   const {
+    pregador,
+    culto,
     nomeCulto,
     semana,
     data,
@@ -31,8 +33,8 @@ const setLancamentos = asyncHandler(async (req, res) => {
     convertidosAlvo,
     convertidosReal,
     financasAlvo,
-    financasDizimosAlvo,
-    financasDizimosReal,
+    financasDizimosCash,
+    financasDizimosTransferencia,
     financasOfertas,
     financasTotal,
     pregadorAmor,
@@ -45,11 +47,13 @@ const setLancamentos = asyncHandler(async (req, res) => {
     throw new Error("Preencha todos os campos obrigatorios");
   }
 
-  const newLancamento = await Lancamentos.create({
+  const newLancamento = await Lancamentos.create({ 
+    culto,
+    pregador,
     nomeCulto,
     semana,
     data,
-    palavra,
+    palavra, 
     observacao,
     pregadorAssistente: {
       pregadorAmor,
@@ -58,8 +62,8 @@ const setLancamentos = asyncHandler(async (req, res) => {
     financas: {
       alvoFinancas: financasAlvo,
       dizimos: {
-        alvo: financasDizimosAlvo,
-        real: financasDizimosReal
+        cash: financasDizimosCash,
+        transferencia: financasDizimosTransferencia
       },
       ofertas: financasOfertas,
       total: financasTotal,

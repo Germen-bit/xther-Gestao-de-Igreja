@@ -10,13 +10,6 @@ const tarefasSchema = mongoose.Schema({
         type: String,
         required: [true, 'O titulo é obrigatorio em cada tarefa']
     },
-    observacao: {
-        type: String,
-    },
-    inicio: {
-        type: Date,
-        default: Date.now()
-    },
     fim: {
         type: Date,
         required: true

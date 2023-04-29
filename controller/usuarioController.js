@@ -38,11 +38,16 @@ const loginUsuario = asyncHandler(async (req, res) => {
 
 // DESC cadastra usuarios
 const setUsuario = asyncHandler(async (req, res) => {
-    const { nome, sobrenome, email, password, telefone } = req.body
+    const { nome, sobrenome, email, password, telefone, confirmarPassword } = req.body
     
-    if (!nome || !email || !password){
+    if (!nome || !email || !password || !confirmarPassword){
         res.status(400)
         throw new Error("Preencha os campos obrigatórios")
+    }
+
+    // Verificar se o email ja existe na base de dados
+    if (await Usuario.findOne({ email })) {
+        throw new Error("Esse email já existe")
     }
     
     // Hash password

@@ -22,14 +22,14 @@ const setCultos = asyncHandler(async (req, res) => {
   const {
     nomeLider,
     data,
-    coLider1,
-    coLider2,
     nomeCulto,
-    presencas,
+    adultos,
     convertidos,
     criancas,
     financas,
+    integrantes
   } = req.body;
+  console.log(adultos)
 
   if (!req.body) {
     res.status(400);
@@ -40,10 +40,9 @@ const setCultos = asyncHandler(async (req, res) => {
     nomeCulto,
     nomeLider,
     data,
-    coLider1,
-    coLider2,
+    integrantes,
     alvos: {
-      presencas,
+      adultos,
       convertidos,
       criancas,
       financas,

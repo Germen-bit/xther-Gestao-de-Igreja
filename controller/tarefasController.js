@@ -16,10 +16,10 @@ const getTarefas = asyncHandler(async (req, res) =>{
 })
 
 // DESC     Criar novas tarefas
-// GET      api/tarefas/
+// POST      api/tarefas/
 // access   Private
 const setTarefas = asyncHandler(async (req, res) =>{
-    const { titulo, observacao, fim } = req.body
+    const { titulo, fim } = req.body
     if (!titulo || !fim) {
         res.status(400)
         throw new Error('Preencha os campos obrigatório')
@@ -27,7 +27,6 @@ const setTarefas = asyncHandler(async (req, res) =>{
 
     const newTarefa = await Tarefas.create({
         titulo,
-        observacao,
         fim,
         usuario: req.user.id
     })

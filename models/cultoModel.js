@@ -9,19 +9,15 @@ const cultoSchema = mongoose.Schema({
     type: Date,
     required: true,
   },
-  coLider1: {
-    type: String,
-    required: true,
-  },
-  coLider2: {
-    type: String,
+  integrantes: {
+    type: Array,
   },
   nomeCulto: {
     type: String,
     required: true,
   },
   alvos: {
-    presencas: { type: Number },
+    adultos: { type: Number },
     convertidos: { type: Number },
     criancas: { type: Number },
     financas: { type: Number },

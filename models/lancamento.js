@@ -1,10 +1,19 @@
 const mongoose = require("mongoose");
 
 const lancamentoSchema = mongoose.Schema({
+  culto: {
+    type: mongoose.Schema.Types.ObjectId,
+    required: true,
+    ref: 'Cultos'
+  },
+  pregador: {
+    type: String,
+    required: true
+  },
   nomeCulto: {
     type: String,
     required: true,
-  },
+  }, 
   semana: {
     type: Number,
     required: true,
@@ -33,7 +42,7 @@ const lancamentoSchema = mongoose.Schema({
   },
   financas: {
     alvoFinancas: { type: Number },
-    dizimos: { alvo: { type: Number }, real: { type: Number } },
+    dizimos: { cash: { type: Number }, transferencia: { type: Number } },
     ofertas: { type: Number },
     total: { type: Number },
   },
