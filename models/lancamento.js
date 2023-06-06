@@ -5,7 +5,7 @@ const lancamentoSchema = mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     required: true,
     ref: 'Cultos'
-  },
+  }, 
   pregador: {
     type: String,
     required: true
@@ -41,10 +41,10 @@ const lancamentoSchema = mongoose.Schema({
     },
   },
   financas: {
-    alvoFinancas: { type: Number },
-    dizimos: { cash: { type: Number }, transferencia: { type: Number } },
-    ofertas: { type: Number },
-    total: { type: Number },
+    alvoFinancas: { type: String },
+    dizimos: { cash: { type: String }, transferencia: { type: String } },
+    ofertas: { type: String },
+    total: { type: String },
   },
   pregadorAssistente: {
     pregadorAmor: { type: String },

@@ -29,7 +29,6 @@ const setCultos = asyncHandler(async (req, res) => {
     financas,
     integrantes
   } = req.body;
-  console.log(adultos)
 
   if (!req.body) {
     res.status(400);
@@ -62,24 +61,23 @@ const setCultos = asyncHandler(async (req, res) => {
 // access   Private
 const updateCultos = asyncHandler(async (req, res) => {
   const cultoId = req.params.id;
-  const {
+  
+    const {
     nomeLider,
     data,
-    coLider1,
-    coLider2,
     nomeCulto,
     presencas,
     convertidos,
     criancas,
     financas,
+    integrantes
   } = req.body;
 
   const updatedCulto = {
     nomeCulto,
     nomeLider,
     data,
-    coLider1,
-    coLider2,
+    integrantes,
     alvos: {
         presencas,
         convertidos,
