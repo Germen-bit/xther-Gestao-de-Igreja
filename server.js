@@ -12,19 +12,19 @@ require("dotenv").config();
 connectDB();
 
 // HTTPS credentials
-// const privateKey = fs.readFileSync(
-//   "/etc/letsencrypt/live/xtherapp.online/privkey.pem"
-// );
-// const certificate = fs.readFileSync(
-//   "/etc/letsencrypt/live/xtherapp.online/cert.pem"
-// );
-// const ca = fs.readFileSync("/etc/letsencrypt/live/xtherapp.online/chain.pem");
+/*const privateKey = fs.readFileSync(
+  "/etc/letsencrypt/live/xtherapp.online/privkey.pem"
+);
+const certificate = fs.readFileSync(
+  "/etc/letsencrypt/live/xtherapp.online/cert.pem"
+);
+const ca = fs.readFileSync("/etc/letsencrypt/live/xtherapp.online/chain.pem");
 
-// const credentials = {
-//   key: privateKey,
-//   cert: certificate,
-//   ca,
-// };
+const credentials = {
+  key: privateKey,
+  cert: certificate,
+  ca,
+};*/
 
 // const httpsServer = https.createServer(credentials, app);
 
@@ -34,12 +34,15 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cors());
 
 // Routes
-app.use("/", express.static(path.join(__dirname, "public")));
 app.use("/api/pastores", require("./routes/api/pastor"));
 app.use("/api/usuarios", require("./routes/api/usuario"));
 app.use("/api/cultos", require("./routes/api/cultos"));
 app.use("/api/lancamentos", require("./routes/api/lancamentos"));
 app.use("/api/tarefas", require("./routes/api/tarefas"));
+
+// Static Routes
+app.use("/", express.static(path.join(__dirname, "public")));
+app.get('*', (req, res) => res.sendFile(path.join(__dirname, 'public', 'index.html')))
 
 // Error handler middleware
 app.use(errorHandler);
