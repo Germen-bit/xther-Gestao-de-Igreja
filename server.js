@@ -3,7 +3,6 @@ const app = express();
 const cors = require("cors");
 const PORT = process.env.PORT || 5000;
 const connectDB = require("./config/db");
-const errorHandler = require("./middleware/errorMiddleware");
 const path = require("path");
 const fs = require("fs");
 const https = require("https");
@@ -43,9 +42,6 @@ app.use("/api/tarefas", require("./routes/api/tarefas"));
 // Static Routes
 app.use("/", express.static(path.join(__dirname, "public")));
 app.get('*', (req, res) => res.sendFile(path.join(__dirname, 'public', 'index.html')))
-
-// Error handler middleware
-app.use(errorHandler);
 
 app.listen(PORT, () => console.log(`HTTP server running at port: ${PORT}`));
 // httpsServer.listen(443,() => console.log("HTTPS server running at port 443"))

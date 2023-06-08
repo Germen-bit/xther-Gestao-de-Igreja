@@ -1,5 +1,6 @@
 const asyncHandler = require("express-async-handler");
 const Cultos = require("../models/cultoModel");
+const validateCultoInput = require("../validation/culto");
 
 // DESC     Buscar todos os cultos
 // GET      api/cultos/
@@ -8,8 +9,7 @@ const getCultos = asyncHandler(async (req, res) => {
   const cultos = await Cultos.find();
 
   if (!cultos || cultos.length === 0) {
-    res.status(400);
-    throw new Error("Nenhum culto ou reunião encontrada");
+    res.status(400).json(errors);
   } else {
     res.status(200).json(cultos);
   }
@@ -19,6 +19,7 @@ const getCultos = asyncHandler(async (req, res) => {
 // POST     api/cultos/
 // access   Private
 const setCultos = asyncHandler(async (req, res) => {
+  const { errors, isValid } = validateCultoInput(req.body);
   const {
     nomeLider,
     data,
@@ -27,12 +28,11 @@ const setCultos = asyncHandler(async (req, res) => {
     convertidos,
     criancas,
     financas,
-    integrantes
+    integrantes,
   } = req.body;
 
-  if (!req.body) {
-    res.status(400);
-    throw new Error("Preencha os campos obrigatorios");
+  if (!isValid) {
+    return res.status(400).json(errors);
   }
 
   const newCulto = await Cultos.create({
@@ -49,8 +49,7 @@ const setCultos = asyncHandler(async (req, res) => {
   });
 
   if (!newCulto) {
-    res.status(400);
-    throw new Error("Verifique os campos preenchidos, parece que há um erro");
+    res.status(400).json(errors);
   } else {
     res.status(200).json(newCulto);
   }
@@ -61,17 +60,21 @@ const setCultos = asyncHandler(async (req, res) => {
 // access   Private
 const updateCultos = asyncHandler(async (req, res) => {
   const cultoId = req.params.id;
-  
-    const {
+  const { errors, isValid } = validateCultoInput(req.body)
+  const {
     nomeLider,
     data,
     nomeCulto,
-    presencas,
     convertidos,
     criancas,
+    adultos,
     financas,
-    integrantes
+    integrantes,
   } = req.body;
+
+  if (!isValid) {
+    return res.status(400).json(errors)
+  }
 
   const updatedCulto = {
     nomeCulto,
@@ -79,19 +82,18 @@ const updateCultos = asyncHandler(async (req, res) => {
     data,
     integrantes,
     alvos: {
-        presencas,
-        convertidos,
-        criancas,
-        financas
-    }
-  }
+      adultos,
+      convertidos,
+      criancas,
+      financas,
+    },
+  };
 
   try {
-    await Cultos.findByIdAndUpdate(cultoId, updatedCulto, {new: true})
-    res.status(200).json({ message: "Culto modificado"})
+    await Cultos.findByIdAndUpdate(cultoId, updatedCulto, { new: true });
+    res.status(200).json({ message: "Culto modificado" });
   } catch (error) {
-    res.status(400)
-    throw new Error("Houve algum problema ao modificar os dados")
+    return res.status(400).json(errors);
   }
 });
 
@@ -99,14 +101,13 @@ const updateCultos = asyncHandler(async (req, res) => {
 // DELETE   api/cultos/:id
 // access   Private
 const deleteCultos = asyncHandler(async (req, res) => {
-  const cultoId = req.params.id
+  const cultoId = req.params.id;
 
   try {
-    await Cultos.findByIdAndDelete(cultoId)
-    res.status(200).json({ message: "Culto removido" })
+    await Cultos.findByIdAndDelete(cultoId);
+    res.status(200).json({ message: "Culto removido" });
   } catch (error) {
-    res.status(400)
-    throw new Error("Houve algum problema ao remover o culto")
+    return res.status(400).json(errors);
   }
 });
 

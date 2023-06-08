@@ -8,7 +8,10 @@ const tarefasSchema = mongoose.Schema({
     },
     titulo: {
         type: String,
-        required: [true, 'O titulo é obrigatorio em cada tarefa']
+        required: true
+    },
+    descricao: {
+        type: String,
     },
     fim: {
         type: Date,

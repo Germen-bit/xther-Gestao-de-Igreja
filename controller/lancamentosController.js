@@ -1,7 +1,7 @@
 const asyncHandler = require("express-async-handler");
 const Lancamentos = require("../models/lancamento");
-const lancamento = require("../models/lancamento");
- 
+const validateLancamentoInput = require('../validation/lancamento') 
+
 // DESC     Busca todos os lancamentos
 // GET      api/lancamentos/
 // access   Private
@@ -16,9 +16,10 @@ const getLancamentos = asyncHandler(async(req, res) => {
 })
 
 // DESC     Realiza lancamentos
-// POST   api/lancamentos/
+// POST     api/lancamentos/
 // access   Private
 const setLancamentos = asyncHandler(async (req, res) => {
+  const { errors, isValid } = validateLancamentoInput(req.body)
   const {
     pregador,
     culto,
@@ -42,9 +43,8 @@ const setLancamentos = asyncHandler(async (req, res) => {
     observacao,
   } = req.body;
 
-  if (!req.body) {
-    res.status(400);
-    throw new Error("Preencha todos os campos obrigatorios");
+  if (!isValid) {
+    return res.status(400).json(errors)
   }
 
   const newLancamento = await Lancamentos.create({ 

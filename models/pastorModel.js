@@ -1,7 +1,11 @@
 const mongoose = require('mongoose')
 
 const pastorSchema = mongoose.Schema({
-    name: {
+    nome: {
+        type: String,
+        required: true
+    },
+    sobrenome: {
         type: String,
         required: true
     },
@@ -25,6 +29,13 @@ const pastorSchema = mongoose.Schema({
     municipio: {
         type: String,
     },
+    funcao: {
+        type: String,
+        required: true
+    },
+    pais: {
+        type: String
+    }
 },
 {
     timestamps: true

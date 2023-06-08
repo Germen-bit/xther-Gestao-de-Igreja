@@ -1,5 +1,6 @@
 const asyncHandler = require('express-async-handler')
 const Tarefas = require('../models/tarefasModel')
+const validateTarefasInput = require('../validation/tarefas')
 
 // DESC     Busca todas as tarefas de um usuario
 // GET      api/tarefas/
@@ -16,19 +17,20 @@ const getTarefas = asyncHandler(async (req, res) =>{
 })
 
 // DESC     Criar novas tarefas
-// POST      api/tarefas/
+// POST     api/tarefas/
 // access   Private
 const setTarefas = asyncHandler(async (req, res) =>{
-    const { titulo, fim } = req.body
-    if (!titulo || !fim) {
-        res.status(400)
-        throw new Error('Preencha os campos obrigatório')
+    const { errors, isValid } = validateTarefasInput(req.body)
+    const { titulo, fim, descricao } = req.body
+    if (!isValid) {
+        return res.status(400).json(errors)
     }
 
     const newTarefa = await Tarefas.create({
         titulo,
         fim,
-        usuario: req.user.id
+        usuario: req.user.id,
+        descricao
     })
 
     res.status(200).json(newTarefa)
