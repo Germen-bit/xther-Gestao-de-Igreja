@@ -107,10 +107,10 @@ const deleteUsuario = asyncHandler(async (req, res) => {
 });
 
 const getMe = asyncHandler(async (req, res) => {
-  const { _id, nome, email } = await Usuario.findById(req.user.id);
+  const { id, nome, email } = await Usuario.findById(req.user.id);
 
   res.status(200).json({
-    id: _id,
+    id,
     nome,
     email,
   });

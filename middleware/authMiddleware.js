@@ -18,15 +18,12 @@ const protect = asyncHandler(async (req, res, next) => {
  
             next()
         } catch (error) {
-            console.log(error)
-            res.status(401)
-            throw new Error("Não autorizado")
+            res.status(401).json({error: "Não autorizado"})
         }
     }
 
     if (!token) {
-        res.status(401)
-        throw new Error("Não autorizado")
+        res.status(401).json({error: "Não autorizado"})
     }
 })
 
