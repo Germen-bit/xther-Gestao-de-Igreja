@@ -10,7 +10,6 @@ const getTarefas = asyncHandler(async (req, res) =>{
 
     if (!tarefas || tarefas.length === 0) {
         res.status(400)
-        throw new Error("Não há nenhuma tarefa criada")
     }
 
     res.status(200).json(tarefas)
@@ -39,20 +38,26 @@ const setTarefas = asyncHandler(async (req, res) =>{
 // PUT      api/tarefas/:id
 // access   Private
 const updateTarefas = asyncHandler(async (req, res) =>{
+    const {errors, isValid } = validateTarefasInput(req.body)
+
+    if (!isValid) {
+        return res.status(400).json(errors)
+    }
+
     const tarefaId = req.params.id
-    const { titulo, fim, observacao } = req.body
+    const { titulo, fim, descricao } = req.body
     const updatedTarefa = {
         titulo,
         fim,
-        observacao
+        descricao
     }
 
     try {
         await Tarefas.findByIdAndUpdate(tarefaId, updatedTarefa)
-        res.status(200).json({ message: "Tarefa modificada"})
+        return res.status(200).json({ message: "Tarefa modificada"})
     } catch (error) {
-        res.status(400)
-        throw new Error("Houve um problema ao modificar esta tarefa")
+        errors.errorTarefa = "Houve um problema ao modificar esta tarefa"
+        return res.status(400).json(errors)
     }
 })
 // DESC     Eliminar uma tarefa
@@ -63,10 +68,9 @@ const deleteTarefas = asyncHandler(async (req, res) =>{
 
     try {
         await Tarefas.findByIdAndRemove(tarefaId)
-        res.status(200).json({ message: "Tarefa removida"})
+        return res.status(200).json({ message: "Tarefa removida"})
     } catch (error) {
-        res.status(400)
-        throw new Error("Erro ao remover esta tarefa")
+        return res.status(400).json({ message: "Houve algum problema ao remover esta tarefa" })
     }
 })
 

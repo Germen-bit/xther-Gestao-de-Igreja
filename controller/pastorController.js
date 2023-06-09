@@ -8,10 +8,9 @@ const validatePastoresInput = require('../validation/pastores')
 const getPastor = asyncHandler(async (req, res) => { 
     const pastor = await Pastor.find()
     if(!pastor) {
-        res.status(400)
-        throw new Error("Nenhum pastor cadastrado na sua igreja")
+        return res.status(400).json({ message: "Nenhum há pastor cadastrado na sua igreja" })
     }
-    res.status(200).json(pastor)
+    return res.status(200).json(pastor)
 })
 
 // DESC     Procura um pastor pelo seu nome
@@ -22,15 +21,13 @@ const getPastorByName = asyncHandler(async (req, res) => {
     const pastor = await Pastor.findOne({ "name": {$regex: pastorName, $options: 'i'} })
     
     if (!pastor) {
-        res.status(404)
-        throw new Error("Pastor não encontrado ou não existe")
+        return res.status(404).json({ message: "Pastor não encontrado ou não existe" })
     }
-
-    res.status(200).json(pastor)
+    return res.status(200).json(pastor)
 })
 
 // DESC     Adicionar pastor
-// POST      api/pastores/
+// POST     api/pastores/
 // access   Private
 const setPastor = asyncHandler(async (req, res) => {
     const { errors, isValid } = validatePastoresInput(req.body)
@@ -52,14 +49,24 @@ const setPastor = asyncHandler(async (req, res) => {
         pais: req.body.pais
     })
 
-    res.status(200).json(newUser)
+    if (!newUser) {
+        errors.addPastor = "Houve algum erro ao adicionar este pastor"
+        return res.status(400).json(errors)
+    }
+    return res.status(200).json(newUser)
 })
 
 // DESC     Atualiza informações sobre os pastores
 // PUT      api/pastores/:id
 // access   Private
 const updatePastor = asyncHandler(async (req, res) => {
+    const { errors, isValid } = validatePastoresInput(req.body)
     const pastorId = req.params.id
+
+    if (!isValid) {
+        return res.status(400).json(errors)
+    }
+
     const pastorUpdate = {
         nome: req.body.nome,
         sobrenome: req.body.sobrenome,
@@ -68,20 +75,25 @@ const updatePastor = asyncHandler(async (req, res) => {
         email: req.body.email,
         morada: req.body.morada,
         provincia: req.body.provincia,
-        municipio: req.body.municipio
+        municipio: req.body.municipio,
+        pais: req.body.pais,
+        funcao: req.body.funcao
     }
 
     await Pastor.findByIdAndUpdate(pastorId, pastorUpdate)
     res.status(200).json({ message:"Pastor atualizado com sucesso"})
 })
 
-// DESC    Apaga um pastor da base de dados da igreja 
-// DELETE      api/pastores/:id
+// DESC     Apaga um pastor da base de dados da igreja 
+// DELETE   api/pastores/:id
 // access   Private
 const deletePastor = asyncHandler(async (req, res) => {
     const pastorId = req.params.id
-    await Pastor.findByIdAndRemove(pastorId)
-    res.status(200).json({ message: "Dados apagado com sucesso"})
+    const result = await Pastor.findByIdAndRemove(pastorId)
+    if (!result) {
+        return res.status(400).json({ message: "Houve algum erro ao apagar os dados desse pastor"}) 
+    }
+    return res.status(200).json({ message: "Dados apagado com sucesso"})
 })
 
 module.exports = {

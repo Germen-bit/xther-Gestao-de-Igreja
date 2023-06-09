@@ -3,31 +3,33 @@ const Usuario = require("../models/usuarioModel");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const validateUsuarioInput = require("../validation/usuario");
-const validateLoginInput = require('../validation/login')
+const validateLoginInput = require("../validation/login");
 
 // DESC     Procura usuarios
+// GET      api/usuarios/
+// access   Public
 const getUsuario = asyncHandler(async (req, res) => {
   const usuarios = await Usuario.find();
   if (!usuarios || usuarios.length === 0) {
-    res.status(400);
-    throw new Error("Nenhum usuarios encontrado");
+    return res.status(400).json({ message: "Nenhum usuarios encontrado" });
   }
-
-  res.status(200).json(usuarios);
+  return res.status(200).json(usuarios);
 });
 
-// DESC login de usuarios
+// DESC     login de usuarios
+// POST     api/usuarios/login
+// access   Public
 const loginUsuario = asyncHandler(async (req, res) => {
-  const { errors, isValid } = validateLoginInput(req.body)
-  const { email, password } = req.body
-
+  const { errors, isValid } = validateLoginInput(req.body);
   if (!isValid) {
-    return res.status(400).json(errors)
+    return res.status(400).json(errors);
   }
+
+  const { email, password } = req.body;
   const usuario = await Usuario.findOne({ email: email });
   if (!usuario) {
-    errors.email = "Email inexistente"
-    return res.status(400).json(errors)
+    errors.email = "Este usuario não existe";
+    return res.status(400).json(errors);
   }
   if (usuario && (await bcrypt.compare(password, usuario.password))) {
     res.status(201).json({
@@ -37,16 +39,18 @@ const loginUsuario = asyncHandler(async (req, res) => {
       token: generateToken(usuario._id),
     });
   } else {
-    errors.password = "Password incorrecta"
+    errors.password = "Password incorrecta";
     return res.status(400).json(errors);
   }
 });
 
-// DESC cadastra usuarios
+// DESC     cadastra usuarios
+// POST     api/usuarios/
+// access   Public
 const setUsuario = asyncHandler(async (req, res) => {
   const { errors, isValid } = validateUsuarioInput(req.body);
-  const {nome, sobrenome, email, telefone, password} = req.body;
-  
+  const { nome, sobrenome, email, telefone, password } = req.body;
+
   if (!isValid) {
     return res.status(400).json(errors);
   }
@@ -79,6 +83,11 @@ const setUsuario = asyncHandler(async (req, res) => {
 });
 
 const updateUsuario = asyncHandler(async (req, res) => {
+  const { errors, isValid } =  validateUsuarioInput(req.body)
+  if (!isValid) {
+    return res.status(400).json(errors)
+  }
+
   const usuarioId = req.params.id;
   const { nome, sobrenome, email, telefone } = req.body;
   const updateUsuario = {

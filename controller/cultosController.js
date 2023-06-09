@@ -6,12 +6,14 @@ const validateCultoInput = require("../validation/culto");
 // GET      api/cultos/
 // access   Private
 const getCultos = asyncHandler(async (req, res) => {
+  const { errors, isValid } = validateCultoInput(req.body)
   const cultos = await Cultos.find();
 
   if (!cultos || cultos.length === 0) {
-    res.status(400).json(errors);
+    errors.cultos = "Nenhum culto encontrado"
+    return res.status(400).json(errors);
   } else {
-    res.status(200).json(cultos);
+    return res.status(200).json(cultos);
   }
 });
 
@@ -49,9 +51,10 @@ const setCultos = asyncHandler(async (req, res) => {
   });
 
   if (!newCulto) {
-    res.status(400).json(errors);
+    errors.resultado = "Houve algum problema "
+    return res.status(400).json(errors);
   } else {
-    res.status(200).json(newCulto);
+    return res.status(200).json(newCulto);
   }
 });
 
@@ -91,8 +94,9 @@ const updateCultos = asyncHandler(async (req, res) => {
 
   try {
     await Cultos.findByIdAndUpdate(cultoId, updatedCulto, { new: true });
-    res.status(200).json({ message: "Culto modificado" });
+    return res.status(200)
   } catch (error) {
+    errors.atualizacao = "Houve um erro ao atualizar este culto, verifique os campos"
     return res.status(400).json(errors);
   }
 });
@@ -105,9 +109,9 @@ const deleteCultos = asyncHandler(async (req, res) => {
 
   try {
     await Cultos.findByIdAndDelete(cultoId);
-    res.status(200).json({ message: "Culto removido" });
+    res.status(200)
   } catch (error) {
-    return res.status(400).json(errors);
+    return res.status(400).json({ message: "Houve um erro ao eliminar este culto"});
   }
 });
 

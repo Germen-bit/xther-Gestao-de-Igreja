@@ -9,10 +9,9 @@ const getLancamentos = asyncHandler(async(req, res) => {
     const lancamentos = await Lancamentos.find()
 
     if (lancamentos.length === 0 || !lancamentos) {
-        res.status(400)
-        throw new Error("Nenhum lançamento encontrado")
+        return res.status(400).json({ message: "Não existe nenhum lançamento feito"})
     }
-    res.status(200).json(lancamentos)
+    return res.status(200).json(lancamentos)
 })
 
 // DESC     Realiza lancamentos
@@ -85,14 +84,14 @@ const setLancamentos = asyncHandler(async (req, res) => {
   });
 
   if (newLancamento) {
-    res.status(200).json(newLancamento);
+    return res.status(200).json(newLancamento);
   } else {
-    res.status(400);
-    throw new Error("Houve um problema ao realizar o lançamento");
+    errors.erroLancamento = "Houve um erro ao realizar este lançamento, verifique se os campos foram preenchidos correctamente"
+    return res.status(400).json(errors)
   }
 });
 
-// DESC     Realiza lancamentos
+// DESC     Eliminar um lançamento
 // DELETE   api/lancamentos/:id
 // access   Private
 const deleteLancamentos = asyncHandler(async (req, res) => {
@@ -102,8 +101,7 @@ const deleteLancamentos = asyncHandler(async (req, res) => {
     await Lancamentos.findByIdAndRemove(lancamentoId);
     res.status(200).json({ message: "O lancamento foi removido com sucesso" });
   } catch (error) {
-    res.status(400);
-    throw new Error("Houve um problema ao remover este lançamento");
+    res.status(400).json({ message: "Houve um problema ao remover este lançamento" });
   }
 });
 
