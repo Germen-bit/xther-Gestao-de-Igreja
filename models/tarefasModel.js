@@ -6,6 +6,11 @@ const tarefasSchema = mongoose.Schema({
         required: true,
         ref: 'Usuario'
     },
+    igrejaFilha: {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+        ref: 'IgrejaFilha'
+    },
     titulo: {
         type: String,
         required: true

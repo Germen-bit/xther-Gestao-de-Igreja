@@ -1,5 +1,6 @@
 const asyncHandler = require("express-async-handler");
 const Usuario = require("../models/usuarioModel");
+const IgrejaFilha = require("../models/igrejaFilhaModel")
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const validateUsuarioInput = require("../validation/usuario");
@@ -9,7 +10,7 @@ const validateLoginInput = require("../validation/login");
 // GET      api/usuarios/
 // access   Public
 const getUsuario = asyncHandler(async (req, res) => {
-  const usuarios = await Usuario.find();
+  const usuarios = await Usuario.find().populate('igrejaFilha',['validade', '_id','denominacao']);
   if (!usuarios || usuarios.length === 0) {
     return res.status(400).json({ message: "Nenhum usuarios encontrado" });
   }
@@ -32,7 +33,7 @@ const loginUsuario = asyncHandler(async (req, res) => {
     return res.status(400).json(errors);
   }
   if (usuario && (await bcrypt.compare(password, usuario.password))) {
-    res.status(201).json({
+    res.status(200).json({
       _id: usuario.id,
       nome: usuario.nome,
       email: usuario.email,
@@ -49,11 +50,18 @@ const loginUsuario = asyncHandler(async (req, res) => {
 // access   Public
 const setUsuario = asyncHandler(async (req, res) => {
   const { errors, isValid } = validateUsuarioInput(req.body);
-  const { nome, sobrenome, email, telefone, password } = req.body;
+  const { nome, sobrenome, email, telefone, password, handle } = req.body;
 
   if (!isValid) {
     return res.status(400).json(errors);
   }
+
+  // Verificar a igreja pelo handle
+  const igreja = await IgrejaFilha.findOne({ handle })
+  if (!igreja) {
+    errors.handle = "Esta igreja não existe"
+    return res.status(400).json(errors)
+  } 
 
   // Verificar se o email ja existe na base de dados
   if (await Usuario.findOne({ email })) {
@@ -71,6 +79,8 @@ const setUsuario = asyncHandler(async (req, res) => {
     email,
     telefone,
     password: hashedPassword,
+    igrejaFilha: igreja._id,
+    handle,
   });
 
   if (usuario) {
@@ -107,12 +117,12 @@ const deleteUsuario = asyncHandler(async (req, res) => {
 });
 
 const getMe = asyncHandler(async (req, res) => {
-  const { id, nome, email } = await Usuario.findById(req.user.id);
-
+  const { id, nome, email, handle } = await Usuario.findById(req.user.id);
   res.status(200).json({
     id,
     nome,
     email,
+    handle
   });
 });
 

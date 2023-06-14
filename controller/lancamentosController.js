@@ -1,24 +1,28 @@
 const asyncHandler = require("express-async-handler");
 const Lancamentos = require("../models/lancamento");
-const validateLancamentoInput = require('../validation/lancamento') 
+const validateLancamentoInput = require("../validation/lancamento");
 
 // DESC     Busca todos os lancamentos
 // GET      api/lancamentos/
 // access   Private
-const getLancamentos = asyncHandler(async(req, res) => {
-    const lancamentos = await Lancamentos.find()
+const getLancamentos = asyncHandler(async (req, res) => {
+  const { igrejaFilha } = req.user;
+  const lancamentos = await Lancamentos.find({ igrejaFilha });
 
-    if (lancamentos.length === 0 || !lancamentos) {
-        return res.status(400).json({ message: "Não existe nenhum lançamento feito"})
-    }
-    return res.status(200).json(lancamentos)
-})
+  if (lancamentos.length === 0 || !lancamentos) {
+    return res
+      .status(400)
+      .json({ message: "Não existe nenhum lançamento feito" });
+  }
+  return res.status(200).json(lancamentos);
+});
 
 // DESC     Realiza lancamentos
 // POST     api/lancamentos/
 // access   Private
 const setLancamentos = asyncHandler(async (req, res) => {
-  const { errors, isValid } = validateLancamentoInput(req.body)
+  const { errors, isValid } = validateLancamentoInput(req.body);
+  const { igrejaFilha, id } = req.user;
   const {
     pregador,
     culto,
@@ -43,16 +47,18 @@ const setLancamentos = asyncHandler(async (req, res) => {
   } = req.body;
 
   if (!isValid) {
-    return res.status(400).json(errors)
+    return res.status(400).json(errors);
   }
 
-  const newLancamento = await Lancamentos.create({ 
+  const newLancamento = await Lancamentos.create({
+    usuario: id,
+    igrejaFilha,
     culto,
     pregador,
     nomeCulto,
     semana,
     data,
-    palavra, 
+    palavra,
     observacao,
     pregadorAssistente: {
       pregadorAmor,
@@ -62,7 +68,7 @@ const setLancamentos = asyncHandler(async (req, res) => {
       alvoFinancas: financasAlvo,
       dizimos: {
         cash: financasDizimosCash,
-        transferencia: financasDizimosTransferencia
+        transferencia: financasDizimosTransferencia,
       },
       ofertas: financasOfertas,
       total: financasTotal,
@@ -86,8 +92,9 @@ const setLancamentos = asyncHandler(async (req, res) => {
   if (newLancamento) {
     return res.status(200).json(newLancamento);
   } else {
-    errors.erroLancamento = "Houve um erro ao realizar este lançamento, verifique se os campos foram preenchidos correctamente"
-    return res.status(400).json(errors)
+    errors.erroLancamento =
+      "Houve um erro ao realizar este lançamento, verifique se os campos foram preenchidos correctamente";
+    return res.status(400).json(errors);
   }
 });
 
@@ -101,12 +108,14 @@ const deleteLancamentos = asyncHandler(async (req, res) => {
     await Lancamentos.findByIdAndRemove(lancamentoId);
     res.status(200).json({ message: "O lancamento foi removido com sucesso" });
   } catch (error) {
-    res.status(400).json({ message: "Houve um problema ao remover este lançamento" });
+    res
+      .status(400)
+      .json({ message: "Houve um problema ao remover este lançamento" });
   }
 });
 
 module.exports = {
   setLancamentos,
   deleteLancamentos,
-  getLancamentos
+  getLancamentos,
 };

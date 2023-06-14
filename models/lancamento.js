@@ -1,11 +1,21 @@
 const mongoose = require("mongoose");
 
 const lancamentoSchema = mongoose.Schema({
+  usuario: {
+    type: mongoose.Schema.Types.ObjectId,
+    required: true,
+    ref: 'Usuario'
+  },
   culto: {
     type: mongoose.Schema.Types.ObjectId,
     required: true,
     ref: 'Cultos'
-  }, 
+  },
+  igrejaFilha: {
+    type: mongoose.Schema.Types.ObjectId,
+    required: true,
+    ref: 'IgrejaFilha'
+  },
   pregador: {
     type: String,
     required: true

@@ -6,7 +6,8 @@ const validateTarefasInput = require("../validation/tarefas");
 // GET      api/tarefas/
 // access   Private
 const getTarefas = asyncHandler(async (req, res) => {
-  const tarefas = await Tarefas.find({ usuario: req.user.id });
+  const { igrejaFilha } = req.user
+  const tarefas = await Tarefas.find({ igrejaFilha });
 
   if (!tarefas || tarefas.length === 0) {
     return res.status(400).json({ message: "Não há nenhuma tarefa" });
@@ -19,15 +20,17 @@ const getTarefas = asyncHandler(async (req, res) => {
 // access   Private
 const setTarefas = asyncHandler(async (req, res) => {
   const { errors, isValid } = validateTarefasInput(req.body);
+  const { igrejaFilha, id } = req.user
   const { titulo, fim, descricao } = req.body;
   if (!isValid) {
     return res.status(400).json(errors);
   }
 
   const newTarefa = await Tarefas.create({
+    igrejaFilha,
     titulo,
     fim,
-    usuario: req.user.id,
+    usuario: id,
     descricao,
   });
 

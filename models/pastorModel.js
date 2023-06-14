@@ -1,6 +1,16 @@
 const mongoose = require('mongoose')
 
 const pastorSchema = mongoose.Schema({
+    usuario: {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+        ref: 'Usuario'
+    },
+    igrejaFilha: {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+        ref: 'IgrejaFilha'
+    },
     nome: {
         type: String,
         required: true

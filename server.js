@@ -38,6 +38,8 @@ app.use("/api/usuarios", require("./routes/api/usuario"));
 app.use("/api/cultos", require("./routes/api/cultos"));
 app.use("/api/lancamentos", require("./routes/api/lancamentos"));
 app.use("/api/tarefas", require("./routes/api/tarefas"));
+app.use("/api/igreja-filha", require("./routes/api/igrejaFilha"))
+app.use("/api/igreja-mae", require("./routes/api/igrejaMae"))
 
 // Static Routes
 app.use("/", express.static(path.join(__dirname, "public")));

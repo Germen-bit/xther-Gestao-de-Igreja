@@ -10,12 +10,16 @@ module.exports = function validateUsuarioInput(data) {
     data.telefone = !isEmpty(data.telefone) ? data.telefone : ''
     data.password = !isEmpty(data.password) ? data.password : ''
     data.confirmarPassword = !isEmpty(data.confirmarPassword) ? data.confirmarPassword : ''
+    data.handle = !isEmpty(data.handle) ? data.handle : ''
 
     if (!Validator.isLength(data.nome, { min: 4, max: 30 })) {
         errors.nome = "Nome deve ter entre 4 a 30 caracteres"
     }
     if (Validator.isEmpty(data.nome)) {
         errors.nome = "Campo nome é obrigatorio"
+    }
+    if (Validator.isEmpty(data.handle)) {
+        errors.handle = "Campo ID da igreja é obrigatorio"
     }
     if (!Validator.isLength(data.sobrenome, { min: 4, max: 30 })) {
         errors.sobrenome = "Sobrenome deve ter entre 4 a 30 caracteres"

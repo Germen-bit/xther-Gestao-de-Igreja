@@ -7,7 +7,8 @@ const validateCultoInput = require("../validation/culto");
 // access   Private
 const getCultos = asyncHandler(async (req, res) => {
   const { errors, isValid } = validateCultoInput(req.body)
-  const cultos = await Cultos.find();
+  const { igrejaFilha } = req.user
+  const cultos = await Cultos.find({ igrejaFilha });
 
   if (!cultos || cultos.length === 0) {
     errors.cultos = "Nenhum culto encontrado"
@@ -32,12 +33,16 @@ const setCultos = asyncHandler(async (req, res) => {
     financas,
     integrantes,
   } = req.body;
+  const { igrejaFilha, id } = req.user
 
   if (!isValid) {
     return res.status(400).json(errors);
   }
 
+
   const newCulto = await Cultos.create({
+    usuario: id,
+    igrejaFilha,
     nomeCulto,
     nomeLider,
     data,
