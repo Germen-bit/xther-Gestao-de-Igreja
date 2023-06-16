@@ -7,7 +7,7 @@ const randomString = require('randomstring')
 // access   Public
 const getIgreja = asyncHandler(async (req, res) => {
     const igreja = await IgrejaFilha.find()
-
+    
     if (!igreja || igreja.length === 0) {
         return res.status(400).json({ message: "Nenhuma igreja existente"})
     } else {

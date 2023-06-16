@@ -3,11 +3,11 @@ const Pastor = require("../models/pastorModel");
 const validatePastoresInput = require("../validation/pastores");
 
 // DESC     Procura todos os pastores da igreja
-// GET      api/pastores/
+// GET      api/pastores/ 
 // access   Private
 const getPastor = asyncHandler(async (req, res) => {
-  const { igrejaFilha } = req.user;
-  const pastor = await Pastor.find({ igrejaFilha });
+  const igrejaID = req.params.id;
+  const pastor = await Pastor.find({ igrejaFilha: igrejaID });
   if (!pastor) {
     return res
       .status(400)
@@ -17,7 +17,7 @@ const getPastor = asyncHandler(async (req, res) => {
 });
 
 // DESC     Procura um pastor pelo seu nome
-// GET      api/pastores/:nome
+// GET      api/pastores/igreja-filha/:id/:nome
 // access   Private
 const getPastorByName = asyncHandler(async (req, res) => {
   const pastorName = req.params.nome;
@@ -36,7 +36,7 @@ const getPastorByName = asyncHandler(async (req, res) => {
 });
 
 // DESC     Adicionar pastor
-// POST     api/pastores/
+// POST     api/pastores/igreja-filha/:id
 // access   Private
 const setPastor = asyncHandler(async (req, res) => {
   const { errors, isValid } = validatePastoresInput(req.body);
@@ -52,7 +52,8 @@ const setPastor = asyncHandler(async (req, res) => {
     pais,
     funcao,
   } = req.body;
-  const { igrejaFilha, id } = req.user;
+  const { id } = req.user;
+  const igrejaID = req.params.id
 
   if (!isValid) {
     return res.status(400).json(errors);
@@ -60,7 +61,7 @@ const setPastor = asyncHandler(async (req, res) => {
 
   const newUser = await Pastor.create({
     usuario: id,
-    igrejaFilha,
+    igrejaFilha: igrejaID,
     nome,
     sobrenome,
     tel1,

@@ -3,12 +3,12 @@ const Cultos = require("../models/cultoModel");
 const validateCultoInput = require("../validation/culto");
 
 // DESC     Buscar todos os cultos
-// GET      api/cultos/
+// GET      api/cultos/igreja-filha/:id
 // access   Private
 const getCultos = asyncHandler(async (req, res) => {
   const { errors, isValid } = validateCultoInput(req.body)
-  const { igrejaFilha } = req.user
-  const cultos = await Cultos.find({ igrejaFilha });
+  const igrejaID = req.params.id
+  const cultos = await Cultos.find({ igrejaFilha: igrejaID });
 
   if (!cultos || cultos.length === 0) {
     errors.cultos = "Nenhum culto encontrado"
@@ -16,10 +16,10 @@ const getCultos = asyncHandler(async (req, res) => {
   } else {
     return res.status(200).json(cultos);
   }
-});
+}); 
 
 // DESC     Criar novos cultos
-// POST     api/cultos/
+// POST     api/cultos/igreja-filha/:igrejaID
 // access   Private
 const setCultos = asyncHandler(async (req, res) => {
   const { errors, isValid } = validateCultoInput(req.body);
@@ -33,7 +33,8 @@ const setCultos = asyncHandler(async (req, res) => {
     financas,
     integrantes,
   } = req.body;
-  const { igrejaFilha, id } = req.user
+  const { id } = req.user
+  const igrejaID = req.params.id
 
   if (!isValid) {
     return res.status(400).json(errors);
@@ -42,7 +43,7 @@ const setCultos = asyncHandler(async (req, res) => {
 
   const newCulto = await Cultos.create({
     usuario: id,
-    igrejaFilha,
+    igrejaFilha: igrejaID,
     nomeCulto,
     nomeLider,
     data,

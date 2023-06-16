@@ -3,11 +3,11 @@ const Lancamentos = require("../models/lancamento");
 const validateLancamentoInput = require("../validation/lancamento");
 
 // DESC     Busca todos os lancamentos
-// GET      api/lancamentos/
+// GET      api/lancamentos/igreja-filha/:id
 // access   Private
 const getLancamentos = asyncHandler(async (req, res) => {
-  const { igrejaFilha } = req.user;
-  const lancamentos = await Lancamentos.find({ igrejaFilha });
+  const igrejaID = req.params.id;
+  const lancamentos = await Lancamentos.find({ igrejaFilha: igrejaID });
 
   if (lancamentos.length === 0 || !lancamentos) {
     return res
@@ -18,11 +18,11 @@ const getLancamentos = asyncHandler(async (req, res) => {
 });
 
 // DESC     Realiza lancamentos
-// POST     api/lancamentos/
+// POST     api/lancamentos/igreja-filha/:id
 // access   Private
 const setLancamentos = asyncHandler(async (req, res) => {
   const { errors, isValid } = validateLancamentoInput(req.body);
-  const { igrejaFilha, id } = req.user;
+  const { id } = req.user;
   const {
     pregador,
     culto,
@@ -46,13 +46,15 @@ const setLancamentos = asyncHandler(async (req, res) => {
     observacao,
   } = req.body;
 
+  const igrejaID = req.params.id
+
   if (!isValid) {
     return res.status(400).json(errors);
   }
 
   const newLancamento = await Lancamentos.create({
     usuario: id,
-    igrejaFilha,
+    igrejaFilha: igrejaID,
     culto,
     pregador,
     nomeCulto,

@@ -2,12 +2,12 @@ const asyncHandler = require("express-async-handler");
 const Tarefas = require("../models/tarefasModel");
 const validateTarefasInput = require("../validation/tarefas");
 
-// DESC     Busca todas as tarefas de um usuario
-// GET      api/tarefas/
-// access   Private
+// DESC     Busca todas as tarefas de uma igreja
+// GET      api/tarefas/:id
+// access   Private 
 const getTarefas = asyncHandler(async (req, res) => {
-  const { igrejaFilha } = req.user
-  const tarefas = await Tarefas.find({ igrejaFilha });
+  const igrejaID = req.params.id
+  const tarefas = await Tarefas.find({ igrejaFilha: igrejaID });
 
   if (!tarefas || tarefas.length === 0) {
     return res.status(400).json({ message: "Não há nenhuma tarefa" });
@@ -16,22 +16,23 @@ const getTarefas = asyncHandler(async (req, res) => {
 });
 
 // DESC     Criar novas tarefas
-// POST     api/tarefas/
+// POST     api/tarefas/:id
 // access   Private
 const setTarefas = asyncHandler(async (req, res) => {
   const { errors, isValid } = validateTarefasInput(req.body);
-  const { igrejaFilha, id } = req.user
-  const { titulo, fim, descricao } = req.body;
   if (!isValid) {
     return res.status(400).json(errors);
   }
+  const igrejaID = req.params.id
+  const { id } = req.user
+  const { titulo, fim, descricao } = req.body;
 
   const newTarefa = await Tarefas.create({
-    igrejaFilha,
-    titulo,
-    fim,
     usuario: id,
+    igrejaFilha: igrejaID,
+    titulo,
     descricao,
+    fim,
   });
 
   res.status(200).json(newTarefa);
