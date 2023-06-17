@@ -99,8 +99,8 @@ const updateCultos = asyncHandler(async (req, res) => {
   };
 
   try {
-    await Cultos.findByIdAndUpdate(cultoId, updatedCulto, { new: true });
-    return res.status(200)
+    const culto = await Cultos.findByIdAndUpdate(cultoId, updatedCulto, { new: true });
+    return res.status(200).json(culto)
   } catch (error) {
     errors.atualizacao = "Houve um erro ao atualizar este culto, verifique os campos"
     return res.status(400).json(errors);
@@ -115,7 +115,7 @@ const deleteCultos = asyncHandler(async (req, res) => {
 
   try {
     await Cultos.findByIdAndDelete(cultoId);
-    res.status(200)
+    res.status(200).json({ message: "Culto apagado" })
   } catch (error) {
     return res.status(400).json({ message: "Houve um erro ao eliminar este culto"});
   }

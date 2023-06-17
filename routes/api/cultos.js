@@ -6,4 +6,4 @@ const { protect } = require('../../middleware/authMiddleware')
 router.route('/igreja-filha/:id').get(protect, getCultos).post(protect,setCultos)
 router.route('/:id').put(protect, updateCultos).delete(protect, deleteCultos)
 
-module.exports = router 
+module.exports = router  

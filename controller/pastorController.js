@@ -23,7 +23,6 @@ const getPastorByName = asyncHandler(async (req, res) => {
   const pastorName = req.params.nome;
   const { igrejaFilha } = req.user
   const pastor = await Pastor.findOne({
-    name: { $regex: pastorName, $options: "i" },
     igrejaFilha
   });
 

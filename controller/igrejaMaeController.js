@@ -2,7 +2,7 @@ const asyncHandler = require("express-async-handler");
 const IgrejaMae = require("../models/igrejaMaeModel");
 
 // DESC     Buscar igreja mãe
-// GET      api/igreja-mae/
+// GET      api/igreja-mae/ 
 // access   Private
 const getIgrejaMae = asyncHandler(async (req, res) => {
   try {

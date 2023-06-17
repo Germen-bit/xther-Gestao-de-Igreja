@@ -10,14 +10,14 @@ module.exports = function validatePastoresInput(data) {
     data.email = !isEmpty(data.email) ? data.email : ''
     data.funcao = !isEmpty(data.funcao) ? data.funcao : ''
 
-    if (!Validator.isLength(data.nome, { min: 4, max: 30})) {
-        errors.nome = "Nome deve ter entre 4 a 30 caracteres"
+    if (!Validator.isLength(data.nome, { min: 2, max: 30})) {
+        errors.nome = "Nome deve ter entre 2 a 30 caracteres"
     }
     if (Validator.isEmpty(data.nome)) {
         errors.nome = "Campo nome é obrigatorio"
     }
-    if (!Validator.isLength(data.sobrenome, { min: 4, max: 30})) {
-        errors.sobrenome = "Sobrenome deve ter entre 4 a 30 caracteres"
+    if (!Validator.isLength(data.sobrenome, { min: 2, max: 30})) {
+        errors.sobrenome = "Sobrenome deve ter entre 2 a 30 caracteres"
     }
     if (Validator.isEmpty(data.sobrenome)) {
         errors.sobrenome = "Campo sobrenome é obrigatorio"
