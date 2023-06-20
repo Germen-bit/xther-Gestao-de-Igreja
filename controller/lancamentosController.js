@@ -28,7 +28,7 @@ const setLancamentos = asyncHandler(async (req, res) => {
     culto,
     nomeCulto,
     semana,
-    data,
+    data, 
     palavra,
     adultoAlvo,
     adultoReal,

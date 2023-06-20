@@ -51,10 +51,10 @@ const lancamentoSchema = mongoose.Schema({
     },
   },
   financas: {
-    alvoFinancas: { type: String },
-    dizimos: { cash: { type: String }, transferencia: { type: String } },
-    ofertas: { type: String },
-    total: { type: String },
+    alvoFinancas: { type: Number },
+    dizimos: { cash: { type: Number }, transferencia: { type: Number } },
+    ofertas: { type: Number },
+    total: { type: Number },
   },
   pregadorAssistente: {
     pregadorAmor: { type: String },

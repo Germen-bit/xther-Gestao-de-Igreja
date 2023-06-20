@@ -40,6 +40,7 @@ app.use("/api/lancamentos", require("./routes/api/lancamentos"));
 app.use("/api/tarefas", require("./routes/api/tarefas"));
 app.use("/api/igreja-filha", require("./routes/api/igrejaFilha"))
 app.use("/api/igreja-mae", require("./routes/api/igrejaMae"))
+app.use("/api/comunicados", require("./routes/api/comunicados"))
 
 // Static Routes
 app.use("/", express.static(path.join(__dirname, "public")));

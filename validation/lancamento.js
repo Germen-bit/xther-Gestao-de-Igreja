@@ -39,13 +39,13 @@ module.exports = function validateLancamentoInput(data) {
     if(Validator.isEmpty(data.convertidosReal)) {
         errors.convertidosReal = "Campo convertido real é obrigatorio"
     }    
-    if(Validator.isEmpty(data.financasDizimosCash)) {
+    if(Validator.isEmpty(data.financasDizimosCash.toString())) {
         errors.financasDizimosCash = "Campo cash é obrigatorio"
     }    
-    if(Validator.isEmpty(data.financasDizimosTransferencia)) {
+    if(Validator.isEmpty(data.financasDizimosTransferencia.toString())) {
         errors.financasDizimosTransferencia = "Campo transferências é obrigatorio"
     }    
-    if(Validator.isEmpty(data.financasOfertas)) {
+    if(Validator.isEmpty(data.financasOfertas.toString())) {
         errors.financasOfertas = "Campo ofertas é obrigatorio"
     }        
     if(Validator.isEmpty(data.pregadorAmor)) {
