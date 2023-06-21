@@ -16,7 +16,7 @@ const getTarefas = asyncHandler(async (req, res) => {
 });
 
 // DESC     Criar novas tarefas
-// POST     api/tarefas/:id
+// POST     api/tarefas/igreja-filha/:id
 // access   Private
 const setTarefas = asyncHandler(async (req, res) => {
   const { errors, isValid } = validateTarefasInput(req.body);

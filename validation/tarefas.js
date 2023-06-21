@@ -3,7 +3,6 @@ const isEmpty = require('./is-empty')
 
 module.exports = function validateTarefasInput(data) {
     let errors = {}
-    console.log(data.fim)
 
     data.titulo = !isEmpty(data.titulo) ? data.titulo : ''
     data.fim = !isEmpty(data.fim) ? data.fim : ''
