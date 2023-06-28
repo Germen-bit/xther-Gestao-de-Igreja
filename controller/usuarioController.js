@@ -93,21 +93,51 @@ const setUsuario = asyncHandler(async (req, res) => {
 });
 
 const updateUsuario = asyncHandler(async (req, res) => {
-  const { errors, isValid } =  validateUsuarioInput(req.body)
-  if (!isValid) {
-    return res.status(400).json(errors)
+  const usuarioId = req.params.id;
+  const { nome, sobrenome, email, telefone, handle, password } = req.body;
+  
+  // get usuario
+  const usuario = await Usuario.findOne({ _id: usuarioId })
+  // verify email
+  const emailUser = await Usuario.findOne({ email })
+  if (emailUser && emailUser._id !== usuario._id) {
+    return res.status(400).json({ message: "Este email já foi usado"})
   }
 
-  const usuarioId = req.params.id;
-  const { nome, sobrenome, email, telefone } = req.body;
-  const updateUsuario = {
-    nome,
-    sobrenome,
-    email,
-    telefone,
-  };
-  const usuario = await Usuario.findByIdAndUpdate(usuarioId, updateUsuario);
-  res.status(200).json({ message: "Usuario atualizado" });
+  // Hash password
+  const salt = await bcrypt.genSalt(10)
+  const hashedPassword = await bcrypt.hash(password, salt)
+
+  // separate handles
+  const handles = handle.split(',')
+  
+  // Update user
+  if (nome) {
+    usuario.nome = nome
+  }
+  if (sobrenome) {
+    usuario.sobrenome = sobrenome
+  }
+  if (email) {
+    usuario.email = email
+  }
+  if (telefone) {
+    usuario.telefone = telefone
+  }
+  if (password) {
+    usuario.password = hashedPassword
+  }
+  if (handle) {
+    usuario.handle = handles
+  }
+
+  try {
+    await usuario.save()
+    return res.status(200).json({ message: "Dados atualizados" })
+  } catch (error) {
+    return res.status(400).json(error)
+  }
+
 });
 
 const deleteUsuario = asyncHandler(async (req, res) => {
@@ -117,12 +147,14 @@ const deleteUsuario = asyncHandler(async (req, res) => {
 });
 
 const getMe = asyncHandler(async (req, res) => {
-  const { id, nome, email, handle } = await Usuario.findById(req.user.id);
+  const { id, nome, email, handle,  sobrenome, telefone } = await Usuario.findById(req.user.id);
   res.status(200).json({
     id,
     nome,
     email,
-    handle
+    handle,
+    sobrenome,
+    telefone
   });
 });
 
